@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser')
+const MongoClient = require('mongodb').MongoClient
 const app = express();
+
+var db
 
 app.use(bodyParser.urlencoded({extended: true}))
 
@@ -10,9 +13,24 @@ app.get('/', (req, res) => {
 // Note: Request and response are usually written as req and res respectively
 
 app.post('/quotes', (req, res) => {
-  console.log(req.body)
+  db.collection('quotes').save(req.body, (err, result) => {
+    if(err) return console.log(err)
+
+    console.log('saved to database')
+    res.redirect('/')
+  })
 })
 
-app.listen(3000, function(){
-  console.log('listening on 3000')
+
+
+MongoClient.connect('mongodb://root:rootpassword@ds155651.mlab.com:55651/express-mongo-tutorial', (err, database) => {
+  // .. Start the server here
+  if(err){
+    return console.log(err)
+  }
+  db = database
+  app.listen(3000, () => {
+    console.log('listening on 3000')
+  })
 })
+// I'm going to hook this to MLab
