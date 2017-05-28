@@ -8,7 +8,10 @@ var db
 app.use(bodyParser.urlencoded({extended: true}))
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html')
+  //res.sendFile(__dirname + '/index.html')
+  db.collection('quotes').find().toArray(function(err, results){
+    console.log(results)
+  })
 })
 // Note: Request and response are usually written as req and res respectively
 
